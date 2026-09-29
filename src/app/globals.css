@@ -1,0 +1,304 @@
+@import 'tailwindcss';
+
+/* 显式声明源码范围，保证组件里的响应式与任意值类都能被扫描到 */
+@source "../**/*.{ts,tsx}";
+
+/**
+ * 设计令牌。
+ * 整体为黑白色调，配荧光色作为强调；文字带柔和阴影，圆角偏大，过渡统一。
+ */
+@theme {
+  --color-ink: #08080a;
+  --color-ink-soft: #0e0e12;
+  --color-surface: #14141a;
+  --color-surface-2: #1c1c24;
+  --color-line: #2a2a34;
+  --color-line-soft: #202028;
+  --color-text: #f3f3f6;
+  --color-muted: #9a9aa6;
+  --color-faint: #6c6c78;
+  --color-accent: #c8ff4d;
+  --color-accent-soft: #8fd400;
+  --color-accent-2: #5ce1ff;
+  --color-danger: #ff6b6b;
+  --color-warn: #ffc857;
+
+  --radius-xl2: 1.5rem;
+  --font-sans:
+    'Inter', 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', system-ui, -apple-system,
+    sans-serif;
+  --font-serif: 'Songti SC', 'Source Han Serif SC', 'Noto Serif SC', Georgia, serif;
+
+  --shadow-soft: 0 18px 40px -24px rgb(0 0 0 / 0.9);
+  --shadow-glow: 0 0 0 1px rgb(200 255 77 / 0.35), 0 0 24px -4px rgb(200 255 77 / 0.45);
+}
+
+:root {
+  --text-glow: 0 1px 2px rgb(0 0 0 / 0.5);
+  color-scheme: dark;
+}
+
+* {
+  border-color: var(--color-line-soft);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: var(--color-ink);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  text-shadow: var(--text-glow);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 背景的荧光辉光，不参与交互 */
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.aurora::before,
+.aurora::after {
+  content: '';
+  position: absolute;
+  width: 46rem;
+  height: 46rem;
+  border-radius: 9999px;
+  filter: blur(120px);
+  opacity: 0.16;
+}
+
+.aurora::before {
+  background: var(--color-accent);
+  top: -18rem;
+  left: -12rem;
+}
+
+.aurora::after {
+  background: var(--color-accent-2);
+  bottom: -22rem;
+  right: -14rem;
+  opacity: 0.12;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-line);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent-soft);
+}
+
+/* 统一的过渡：所有交互元素都带一点动效 */
+button,
+a,
+input,
+textarea,
+select,
+[role='button'] {
+  transition:
+    color 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 220ms ease,
+    transform 180ms ease,
+    opacity 180ms ease;
+}
+
+.fade-in {
+  animation: fade-in 260ms ease both;
+}
+
+.rise-in {
+  animation: rise-in 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.pulse-soft {
+  animation: pulse-soft 1.4s ease-in-out infinite;
+}
+
+/* 等待模型响应时的三点跳动 */
+@keyframes dot-bounce {
+  0%,
+  80%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.45;
+  }
+  40% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+/* 生成中的呼吸光晕，套在正文容器外 */
+@keyframes glow-breathe {
+  0%,
+  100% {
+    box-shadow: 0 0 0 1px rgb(200 255 77 / 0.18), 0 0 26px -12px rgb(200 255 77 / 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 1px rgb(200 255 77 / 0.42), 0 0 40px -8px rgb(200 255 77 / 0.6);
+  }
+}
+
+.streaming-glow {
+  animation: glow-breathe 2.4s ease-in-out infinite;
+}
+
+/* 思考内容面板的展开 */
+@keyframes unfold {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.unfold {
+  animation: unfold 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* 正文：左侧翻页模式下的整页过渡 */
+.page-turn {
+  animation: page-turn 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes page-turn {
+  from {
+    opacity: 0;
+    transform: translateX(24px) rotateY(-4deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 阅读区排版 */
+.prose-novel {
+  font-family: var(--font-serif);
+  text-shadow: 0 1px 3px rgb(0 0 0 / 0.55);
+  word-break: break-word;
+}
+
+.prose-novel p {
+  margin-block: 0.85em;
+  text-indent: 2em;
+}
+
+.prose-novel h1,
+.prose-novel h2,
+.prose-novel h3 {
+  text-indent: 0;
+  font-family: var(--font-sans);
+  font-weight: 600;
+}
+
+.prose-novel blockquote {
+  border-left: 2px solid var(--color-accent);
+  padding-left: 1rem;
+  color: var(--color-muted);
+  text-indent: 0;
+}
+
+.prose-novel li {
+  text-indent: 0;
+}
+
+.dialogue {
+  color: var(--color-accent);
+  text-shadow: 0 0 14px rgb(200 255 77 / 0.28);
+}
+
+/* 拖拽中的规则条目 */
+.dragging {
+  opacity: 0.45;
+}
+
+.drop-target {
+  box-shadow: var(--shadow-glow);
+}
+
+/*
+ * 工作台的两栏布局。
+ * 断点与列宽写在样式表里，避免任意值类在扫描阶段被遗漏。
+ */
+.split-pane {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+}
+
+@media (min-width: 80rem) {
+  .split-pane {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  }
+}
+
+/* 侧栏与正文的双栏布局，用于百科、检索与关系页 */
+.side-pane {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+}
+
+@media (min-width: 64rem) {
+  .side-pane {
+    grid-template-columns: 16rem minmax(0, 1fr);
+  }
+}
+
+input[type='range'] {
+  accent-color: var(--color-accent);
+}

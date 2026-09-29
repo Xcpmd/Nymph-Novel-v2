@@ -1,0 +1,38 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# next.js
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# production
+build/
+dist/
+
+# 本地数据：数据库、密钥与小说正文，绝不入库
+data/
+novel/
+
+# misc
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.local
+.env*.local
+
+# editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# test
+coverage/
+
+# 本地探针产物：截图、临时抓取结果等，不入库
+# 注意 .workbuddy/memory/ 是项目记忆，要保留
+.workbuddy/tmp/
